@@ -12,6 +12,21 @@ Construída com foco em **resiliência, consistência de dados e segurança**, a
 
 ---
 
+### 🎯 Propósito e Contexto do Projeto
+
+Inspirado nos principais gateways de pagamento do mercado angolano (como **Pay4All** e **ProxyPay**), este projeto serve como uma **Implementação de Referência (Reference Implementation)** e um estudo de caso prático de engenharia de software.
+
+O objetivo principal não é apenas fornecer uma API funcional, mas sim **desmistificar a complexidade arquitetural** por trás de um gateway de pagamentos moderno. Este repositório foi desenhado para desenvolvedores, arquitetos de software e entusiastas de sistemas distribuídos que desejam compreender, na prática, como resolver desafios reais de engenharia financeira, tais como:
+
+- **Consistência Eventual:** Como garantir que o estado do pagamento seja sincronizado entre a base de dados e o message broker sem perder dados (Outbox Pattern).
+- **Tolerância a Falhas:** Como o sistema se comporta e recupera quando um provedor externo (ex: rede Multicaixa) está em baixo ou lento (Retry com Dead Letter Queue).
+- **Idempotência:** Como prevenir cobranças duplicadas em cenários de retry de rede, um requisito crítico em qualquer sistema financeiro.
+- **Desacoplamento:** Como utilizar o Adapter Pattern para integrar múltiplos provedores (Express, Referência, é-Kwanza) sem poluir a lógica de negócio central.
+
+Este projeto funciona como um "mapa" para quem deseja transitar de arquiteturas monolíticas simples para **sistemas distribuídos resilientes e prontos para produção**.
+
+---
+
 ## 🏗️ Arquitetura e Padrões de Design
 
 Este projeto não é apenas uma API REST; é um sistema orientado a eventos (Event-Driven) preparado para microserviços.
