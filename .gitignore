@@ -1,0 +1,83 @@
+# ==========================================
+# 1. Compiled Output & Dependencies
+# ==========================================
+/dist
+/node_modules
+/build
+/generated/prisma # Se configuraste output customizado no Prisma
+
+# ==========================================
+# 2. Environment Variables (CRÍTICO)
+# ==========================================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.example # Opcional: ignora se não quiseres partilhar o template, mas geralmente é bom ter no git
+
+# ==========================================
+# 3. Logs & Diagnostics
+# ==========================================
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# ==========================================
+# 4. Testing & Coverage
+# ==========================================
+/coverage
+/.nyc_output
+
+# ==========================================
+# 5. OS & Editor Files
+# ==========================================
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDEs
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# ==========================================
+# 6. Prisma & Database Specifics
+# ==========================================
+# Ignora ficheiros de base de dados locais (SQLite, etc., se usares algum dia)
+*.db
+*.sqlite
+*.sqlite3
+
+# O schema.prisma DEVE estar no git, mas as migrations podem ser ignoradas 
+# se usares apenas 'prisma db push' e não 'prisma migrate'. 
+# Se usares migrations, remove a linha abaixo para as guardar no git.
+# /prisma/migrations 
+
+# ==========================================
+# 7. Temporary & Runtime Files
+# ==========================================
+.temp
+.tmp
+*.tmp
+*.temp

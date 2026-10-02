@@ -1,0 +1,106 @@
+version: '3.8'
+
+services:
+  angolapay-postgres:
+    image: postgres:15-alpine
+    container_name: angolapay-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: angolapay_user
+      POSTGRES_PASSWORD: angolapay_secret
+      POSTGRES_DB: angolapay_db
+    ports:
+      - "5433:5432" # Mapeado para 5433 para evitar conflito com o teu postgres padrão (5432)
+    volumes:
+      - angolapay_pg_data:/var/lib/postgresql/data
+    networks:
+      - angolapay-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U angolapay_user -d angolapay_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  angolapay-redis:
+    image: redis:7-alpine
+    container_name: angolapay-redis
+    restart: always
+    ports:
+      - "6380:6379" # Mapeado para 6380 para evitar conflito
+    volumes:
+      - angolapay_redis_data:/data
+    networks:
+      - angolapay-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  angolapay-kafka:
+    image: confluentinc/cp-kafka:7.6.0
+    container_name: angolapay-kafka
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+    environment:
+      CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@angolapay-kafka:9093
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      # Define dois listeners: um para dentro do docker, outro para fora (localhost)
+      KAFKA_LISTENERS: LISTENER_DOCKER_INTERNAL://angolapay-kafka:29092,LISTENER_DOCKER_EXTERNAL://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
+      # Anuncia os endereços corretos para cada tipo de cliente
+      KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://angolapay-kafka:29092,LISTENER_DOCKER_EXTERNAL://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+    networks:
+      - angolapay-net
+    volumes:
+      - angolapay_kafka_data:/var/lib/kafka/data
+    healthcheck:
+      test: ["CMD", "kafka-topics", "--bootstrap-server", "localhost:9092", "--list"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+
+  # UI para visualizar o Kafka
+  angolapay-kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: angolapay-kafka-ui
+    ports:
+      - "8085:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: angolapay-local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: angolapay-kafka:29092
+    networks:
+      - angolapay-net
+    depends_on:
+      - angolapay-kafka
+  
+  angolapay-redis-insight:
+    image: redis/redisinsight:latest
+    container_name: angolapay-redis-insight
+    ports:
+      - "5540:5540"
+    networks:
+      - angolapay-net
+    volumes:
+      - angolapay_redisinsight_data:/data 
+    depends_on:
+      - angolapay-redis
+
+volumes:
+  angolapay_pg_data:
+  angolapay_redis_data:
+  angolapay_kafka_data:
+  angolapay_redisinsight_data:
+
+networks:
+  angolapay-net:
+    driver: bridge

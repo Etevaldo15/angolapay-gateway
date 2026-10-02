@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum PaymentStatus {
+  CREATED
+  PENDING
+  SUCCESS
+  FAILED
+  EXPIRED
+  CANCELLED
+  SETTLED
+}
+
+enum PaymentMethod {
+  MULTICAIXA_EXPRESS
+  REFERENCE
+  E_KWANZA
+}
+
+model Merchant {
+  id               String   @id @default(uuid())
+  name             String
+  email            String   @unique
+  clientId         String   @unique @map("client_id")
+  clientSecretHash String   @map("client_secret_hash")
+  scopes           String[] @default(["payments:read"])
+  isActive         Boolean  @default(true) @map("is_active")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  payments Payment[]
+
+  //@@map("merchants")
+}
+
+model Payment {
+  id                String        @id @default(uuid())
+  merchantId        String
+  merchant          Merchant      @relation(fields: [merchantId], references: [id])
+  externalReference String        @unique // Referência do pedido no sistema do comerciante
+  idempotencyKey    String        @unique // Garante que o mesmo pedido não seja processado 2x
+  amount            Decimal       @db.Decimal(15, 2)
+  currency          String        @default("AOA")
+  paymentMethod     PaymentMethod
+  status            PaymentStatus @default(CREATED)
+  providerReference String?       @unique // Referência unica gerada pelo Express (ex: nº da referência multicaixa)
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  outboxEvents OutboxEvent[]
+}
+
+model OutboxEvent {
+  id        String   @id @default(uuid())
+  paymentId String
+  payment   Payment  @relation(fields: [paymentId], references: [id])
+  eventType String // ex: "payment.created", "payment.succeeded"
+  payload   String   @db.Text // JSON stringificado do evento
+  published Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([published])
+  @@index([paymentId])
+}
