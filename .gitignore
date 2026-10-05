@@ -81,3 +81,7 @@ Thumbs.db
 .tmp
 *.tmp
 *.temp
+
+# AI Assistant configurations
+.claude/
+.agents/
