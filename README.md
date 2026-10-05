@@ -105,11 +105,9 @@ Este documento detalha os principais padrões de arquitetura, segurança e resil
 
 ## 💻 Tecnologias Relevantes
 
-_(Personaliza esta secção com as versões e ferramentas reais do teu projeto)_
-
 - **Mensajaria:** Apache Kafka
 - **Autenticação:** OAuth2 / JWT
-- **Base de Dados:** PostgreSQL / MySQL / MongoDB
+- **Base de Dados:** PostgreSQL / Redis
 - **Observabilidade:** Prometheus / Grafana Loki
 
 ## 📂 Estrutura do Projeto
