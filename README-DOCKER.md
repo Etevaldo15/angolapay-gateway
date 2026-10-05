@@ -38,3 +38,13 @@ docker volume inspect angolapay_kafka_data
 # 3. Verificar se o volume está efetivamente montado no container do Kafka
 
 docker inspect angolapay-kafka --format='{{json .Mounts}}' | grep angolapay_kafka_data
+
+# Observabilidade (Prometheus / Grafana ) Commands
+
+Iniciar a monitorização (Opt-in)
+
+docker-compose -f docker-compose.monitoring.yml up -d
+
+# Reiniciar container
+
+docker restart angolapay-grafana

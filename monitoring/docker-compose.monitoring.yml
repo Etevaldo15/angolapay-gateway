@@ -1,0 +1,45 @@
+services:
+  angolapay-prometheus:
+    image: prom/prometheus:latest
+    container_name: angolapay-prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle' # Permite recarregar config via HTTP
+    networks:
+      - angolapay-gateway_angolapay-net # Liga-se à rede da app para conseguir fazer scrape
+
+  angolapay-grafana:
+    image: grafana/grafana:latest
+    container_name: angolapay-grafana
+    restart: unless-stopped
+    ports:
+      - "3001:3000" # Porta 3001 para não conflitar com o NestJS (3000)
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin123 # Mudar em produção!
+      - GF_USERS_ALLOW_SIGN_UP=false
+    networks:
+      - angolapay-gateway_angolapay-net
+
+volumes:
+  prometheus_data:
+  grafana_data:
+
+# Declara a rede como externa, pois é criada pelo docker-compose.yml principal
+networks:
+  angolapay-gateway_angolapay-net:
+    external: true

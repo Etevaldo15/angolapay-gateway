@@ -5,6 +5,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 // Infraestrutura
 import { KafkaModule } from './infrastructure/kafka/kafka.module';
 import { RedisModule } from './infrastructure/redis/redis.module';
+import { MetricsModule } from './infrastructure/metrics/metrics.module';
 
 // Módulos de Domínio/Aplicação
 import { PaymentsModule } from './modules/payments/payments.module';
@@ -21,6 +22,7 @@ import { CorrelationIdMiddleware } from './shared/middleware/correlation-id.midd
     ScheduleModule.forRoot(), // Ativa @Interval, @Cron
     KafkaModule,
     RedisModule,
+    MetricsModule,
     AuthModule,
     MerchantsModule,
     PaymentsModule,

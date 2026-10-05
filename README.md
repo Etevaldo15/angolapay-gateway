@@ -231,7 +231,7 @@ cd angolapay-gateway
 npm install
 ```
 
-### 2. Subir a Infraestrutura
+### 2. Subir a Infraestrutura Core
 
 Inicie os contentores do **PostgreSQL, Kafka e Redis** em segundo plano:
 
@@ -255,7 +255,7 @@ JWT_EXPIRES_IN="1h"
 ADMIN_API_KEY="chave-mestra-para-criar-comerciantes"
 ```
 
-### 4. Inicializar a Base de Dados e Iniciar a API
+### 3. Inicializar a Base de Dados e Iniciar a API
 
 Sincronize o schema do Prisma com o banco de dados, gere os clientes de tipagem e inicialize o servidor em modo de desenvolvimento:
 
@@ -266,6 +266,33 @@ npm run start:dev
 ```
 
 ---
+
+### 4. (Opcional) Subir a Stack de Monitorização
+
+Para visualizar métricas em tempo real, sobe os serviços de observabilidade:
+
+```bash
+cd monitoring
+docker compose -f docker-compose.monitoring.yml up -d
+```
+
+- **Grafana:** [http://localhost:3001](http://localhost:3001) (Credenciais: `admin` / `admin123`)
+- **Prometheus:** [http://localhost:9090](http://localhost:9090)
+
+## 📊 Observabilidade e Métricas de Negócio
+
+O gateway expõe um endpoint padronizado em `/api/v1/metrics` que é recolhido pelo Prometheus. As principais métricas de negócio implementadas são:
+
+1. **`payment_processed_total` (Counter):** Total de pagamentos processados, segmentados por método de pagamento e status final.
+2. **`webhook_processing_duration_seconds` (Histogram):** Latência de processamento dos webhooks, permitindo calcular percentis (P50, P90, P99) para monitoramento de performance.
+
+### 🖼️ Dashboard no Grafana
+
+![Dashboard do Grafana](assets/grafana-dashboard.png)
+
+### 🖼️ Prometheus Metrics
+
+![Dashboard do Grafana](assets/prometheus-metrics.png)
 
 ## 📚 Documentação da API (Swagger)
 

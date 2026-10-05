@@ -99,3 +99,7 @@ curl -X POST http://localhost:3000/api/v1/payments \
 "currency": "AOA",
 "paymentMethod": "MULTICAIXA_EXPRESS"
 }'
+
+# Capturar as metricas com request
+
+curl http://localhost:3000/api/v1/metrics | grep payment_processed_total
