@@ -294,6 +294,19 @@ O gateway expõe um endpoint padronizado em `/api/v1/metrics` que é recolhido p
 
 ![Dashboard do Grafana](assets/prometheus-metrics.png)
 
+### 🖥️ Interfaces Gráficas (UIs) de Infraestrutura
+
+Para facilitar o desenvolvimento, debugging e monitorização, o projeto inclui interfaces web para os serviços de infraestrutura. Após subires os containers, acede aos seguintes endereços:
+
+| Serviço           | URL                              | Credenciais / Notas                                                                         |
+| ----------------- | -------------------------------- | ------------------------------------------------------------------------------------------- |
+| **Swagger UI**    | `http://localhost:3000/api/docs` | Documentação interativa da API                                                              |
+| **Kafka UI**      | `http://localhost:8085`          | Visualização de tópicos, mensagens e consumers do Kafka                                     |
+| **Redis Insight** | `http://localhost:5540`          | Gestão e visualização de dados em cache (configurar host: `angolapay-redis`, porta: `6379`) |
+| **Prisma Studio** | `npx prisma studio`              | Interface web para explorar e editar dados do PostgreSQL                                    |
+| **Grafana**       | `http://localhost:3001`          | `admin` / `admin123` (Dashboards de métricas de negócio)                                    |
+| **Prometheus**    | `http://localhost:9090`          | Interface nativa para queries PromQL                                                        |
+
 ## 📚 Documentação da API (Swagger)
 
 A API possui documentação viva e interativa através do Swagger. Com a aplicação em execução, aceda ao endereço abaixo para consultar todos os endpoints, esquemas e payloads disponíveis:
@@ -327,3 +340,30 @@ O desenvolvimento do gateway está estruturado em fases incrementais de maturida
 - [ ] **Fase 3: Reconciliation Engine:** Leitura, parser e processamento automatizado de ficheiros de acerto bancário (_Settlement Files_) para deteção, auditoria e resolução de discrepâncias financeiras.
 - [ ] **Fase 4: Settlements & Ledger:** Motor dinâmico de cálculo de taxas de intermediação (MDR), geração de ficheiros de repasse em lote (_payout batch_) e implementação de razão contabilístico (_Ledger_) com partida dobrada.
 - [ ] **Fase 5: Observability:** Monitorização em tempo real, dashboards com métricas de negócio (taxa de conversão, TPS, volume financeiro) e alertas inteligentes com **Prometheus**, **Grafana** e **OpenTelemetry**.
+
+---
+
+## 🤝 Contribuição
+
+⭐ **Se este projeto te foi útil ou se gostaste da arquitetura, não te esqueças de dar uma estrela (Star) no repositório!** Isso ajuda imenso na visibilidade do projeto e motiva a continuar a partilhar conhecimento de qualidade. ⭐
+
+Este projeto é open-source e foi construído com o objetivo de servir como referência para a comunidade de engenharia de software, especialmente no ecossistema de pagamentos em Angola e em sistemas distribuídos.
+
+**Contribuições, Issues e Pull Requests são extremamente bem-vindos!** 🚀
+
+### Como Contribuir
+
+1. **Faz um Fork** deste repositório clicando no botão "Fork" no topo da página.
+2. **Cria a tua Branch** de funcionalidade ou correção:
+   ```bash
+   git checkout -b feature/minha-nova-feature
+   # ou
+   git checkout -b fix/corrigindo-algo
+   ```
+
+## 👨‍💻 Autor
+
+**Etevaldo Antunes**  
+System Integration | Digital Transformation | Data Engineering
+
+🔗 [LinkedIn](https://www.linkedin.com/in/etevaldo-antunes-225291168)
